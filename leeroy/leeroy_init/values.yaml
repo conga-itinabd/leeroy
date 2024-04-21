@@ -1,0 +1,10 @@
+cfg:
+  user: jenkins_user
+  token: jenkins_api_token
+
+  skiptls: yes
+
+my_first_step:
+  url: https://jenkins.server/build
+common_parameters:
+  for_example_param: some_param

@@ -1,0 +1,20 @@
+# configuration leeroy parameters
+cfg:
+  # required params:
+  user: jenkins_user  # the user which you login to Jenkins
+  token: jenkins_api_token  # API token that can be generated in your user settings
+  # optional params
+  logfile: leeroylogs.txt  # if you do not add this field, there will be no log file
+  skiptls: yes  # if you do not add this field, leeroy wiil use tls
+  output: json  # if you do not add this field, there will be text output
+  debug: yes  # debug mode
+
+# values for stepsbooks
+# don't use here array
+
+test_iterations: 5
+build_number: 111
+cluster1:
+  namespace: example_ns1
+cluster2:
+  namespace: example_ns2
