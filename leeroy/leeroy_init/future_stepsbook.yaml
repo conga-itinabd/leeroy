@@ -1,0 +1,39 @@
+# remember! don't use leeroy with jobs which use active choice parameters, it can brake your job's html. but this problem is already in progress!
+steps:
+  build:  # <-- you can use any key here, it converts for step name
+    - action: build
+      url: https://jenkins.server/build  # <-- here you should put your job url
+      parameters: # here add your job parameters:
+        component: frontend
+        docker_build_args: 80:80
+      log:
+        nexus_url: https://nexus.server/build/*****.tar  # <-- find a substring based on the pattern, which can be used further in Stepsbook as 'log.nexus_url'
+        image: https://registry.server/#****:latest  # sign '#' will cut left part of pattern. here is also availble '****#' and '#***#'
+  #active_choise_build:
+    - action: ac_build  # become in future updates
+      url: https://jenkins.server/build  # <-- here you should put your job url
+      parameters:  # here add your job parameters:
+        component: frontend
+        docker_build_args: 80:80
+      log:
+        nexus_url: https://nexus.server/build/*****.tar  # <-- find a substring based on the pattern, which can be used further in Stepsbook as 'log.nexus_url'
+        image: https://registry.server/#****:latest  # sign '#' will cut left part of pattern. here is also availble '****#' and '#***#'
+  #vault:
+    - action: rebuild  # become in future updates
+      url: https://jenkins.server/vault_job/{{ build_number }}  # <-- here you should put your job url with /<build number> for rebuild
+  deploy:
+    - action: build
+      url: https://jenkins.server/deploy
+      parameters:
+        namespace: {{ cluster1.namespace }}  # <-- it's example of values usage. it can take key.key...key from your values. you can also take values from 'cfg.'
+        component: frontend
+  tests:
+    - action: build
+      url: https://jenkins.server/ft
+      parameters:
+        namespace: {{ cluster1.namespace }}
+      catch: 
+        - Error
+        - Warning
+      iterations: {{ test_iterations }}
+

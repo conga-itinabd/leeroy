@@ -1,0 +1,10 @@
+__pycache__/
+.idea
+.vscode/*
+.DS_Store
+!.vscode/extensions.json
+.flake8
+
+/values.yaml
+/stepsbook.yaml
+

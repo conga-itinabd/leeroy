@@ -1,0 +1,40 @@
+# remember! don't use leeroy with jobs which use active choice parameters, it can brake your job's html. but this problem is already in progress!
+steps:
+  build:  # <-- you can use any key here, it converts for step name
+    - action: build
+      url: https://jenkins.server/build  # <-- here you should put your job url (main page of your job)
+      parameters: # add your job parameters:
+        job: build
+        component: frontend
+        docker_build_args: 80:80
+      log:
+        nexus_url: https://nexus.server/build/*****.tar  # <-- find a substring based on the pattern in job's console output, which can be used further in Stepsbook as '(( log.build.nexus_url ))'
+        image: https://registry.server/#****:latest  # sign '#' will cut left part of pattern. here is also availble '****#' and '#***#'
+  deploy:
+    - action: build
+      url: https://jenkins.server/deploy
+      parameters:
+        job: deploy
+        namespace: {{ cluster1.namespace }}  # <-- it's example of values usage. it can take key.key...key from your values. you can also take values from 'cfg.'
+        component: frontend
+  tests:
+    - action: build
+      url: https://jenkins.server/ft
+      parameters:
+        job: tests
+      catch: 
+        - Error # <-- find number of this substring in job's console output, which can be used further in Stepsbook as '(( catch.build.nexus_url ))'
+        - Warning
+      iterations: {{ test_iterations }}
+  #example_of_disabled_step:  # <-- you can comment step and it will be skipped
+    - action: build
+      url: https://jenkins.server/deploy 
+  report:
+    - action: build
+      url: https://jenkins.server/report
+      parameters:
+        job: build
+        logs_from_build_nexus: (( log.build.nexus_url ))
+        logs_from_build_image: (( log.build.image ))
+        cath_form_tests_Errors: 'Errors: (( catch.tests.Error ))'
+        cath_form_tests_Warnings: (( catch.tests.Warning ))

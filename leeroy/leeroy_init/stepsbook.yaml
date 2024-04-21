@@ -1,0 +1,7 @@
+steps:
+  my_first_step:
+    - action: build
+      url: {{ my_first_step.url }}
+      parameters: 
+        example_parameter_1: {{ common_parameters.for_example_param }}
+        example_parameter_2: some_param
